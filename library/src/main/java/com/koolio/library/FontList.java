@@ -5,8 +5,9 @@ package com.koolio.library;
  */
 
 import java.util.ArrayList;
+import java.io.Serializable;
 
-public class FontList {
+public class FontList implements Serializable {
     ArrayList<Font> fontArrayList;
 
     public FontList() {

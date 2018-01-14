@@ -1,10 +1,12 @@
 package com.koolio.library;
 
+import java.io.Serializable;
+
 /**
  * Created by Firat Karababa on 10.1.2018.
  */
 
-public class Font {
+public class Font implements Serializable {
 
     private String fontFamily, fontCategory, fontVersion, fontLastModified;
     private String[] fontVariants, fontSubsets;
@@ -66,20 +68,36 @@ public class Font {
         this.fontSubsets = fontSubsets;
     }
 
+    // Returns query String with no specification. Query will just use the family name and default values
+    public String getQueryString() {
+        return "name=" + getFontFamily() + "&weight=400" + "&italic=0";
+
+    }
+
+    // Returns query String with the selected variant options. Variant options will be selected based
+    // on given variantOpt ID
     public String getQueryString(int variantOpt) {
-        String variant = getFontVariants()[variantOpt];
-        String query;
+        String[] fontVariants = getFontVariants();
+
+        if(variantOpt < 0 || variantOpt > fontVariants.length-1)
+            throw new IllegalArgumentException("variantOpt argument is out of bound: please use " +
+                    "an int between 0 and variants length-1 (both inclusive)");
+
+        String variant = fontVariants[variantOpt];
+        String query = "name=" + getFontFamily();
 
         if (variant.equals("regular")) {
-            query = "name=" + getFontFamily() + "&weight=400" + "&italic=0";   // Form the query String
+            query += "&weight=400" + "&italic=0";   // Form the query String with default values
         } else if (variant.equals("italic")) {
-            query = "name=" + getFontFamily() + "&weight=400" + "&italic=1";   // Form the query String
+            query += "&weight=400" + "&italic=1";   // Form the query String
         } else if (variant.contains("italic")) {
-            query = "name=" + getFontFamily() + "&weight=" + variant.split("italic")[0] + "&italic=1";   // Form the query String
+            query += "&weight=" + variant.split("italic")[0] + "&italic=1";   // Form the query String
         } else {
-            query = "name=" + getFontFamily() + "&weight=" + variant + "&italic=0";   // Form the query String
+            query += "&weight=" + variant + "&italic=0";   // Form the query String
         }
         return query;
     }
+
+
 
 }
